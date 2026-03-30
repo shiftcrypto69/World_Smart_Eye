@@ -16,6 +16,7 @@
             letter-spacing: -0.02em;
         }
         [x-cloak] { display: none !important; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
 <body class="min-h-screen text-white/90 p-6 md:p-16 flex flex-col justify-between" x-data="{ 
@@ -56,65 +57,78 @@
                 { label: 'Step 2', text: 'Setup World Smart Eye Bot (Snapshot)' }
             ]
         }
+    ],
+    stack: [
+        { name: 'Rust Core', desc: 'Sistem memori selamat & ultra-pantas.' },
+        { name: 'Tauri Runtime', desc: 'GUI Desktop yang ringan (Native WebView).' },
+        { name: 'SurrealDB', desc: 'Database multi-model untuk data real-time.' }
     ]
 }">
 
+    <!-- Header -->
     <header class="max-w-6xl mx-auto mb-16 text-center space-y-6">
         <div class="inline-block p-1 px-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.4em] uppercase mb-2">
             Central Intelligence Hub // Shift_Dev.js
         </div>
-        <h1 class="text-5xl md:text-7xl font-light tracking-tighter">
-            WORLD <span class="font-semibold text-sky-500">SMART EYE</span>
+        <h1 class="text-6xl md:text-8xl font-light tracking-tighter">
+            WORLD <span class="font-semibold text-sky-500 italic">SMART EYE</span>
         </h1>
         <p class="text-white/40 max-w-2xl mx-auto font-light text-lg leading-relaxed">
-            Sistem Pengawasan Pintar: <span class="text-white/70 font-normal">Dari Rumah Untuk Dunia.</span><br>
-            Blueprint integrasi data industri, perniagaan, dan kediaman.
+            Sistem Pengawasan Pintar: <span class="text-white/70 font-normal underline decoration-sky-500/50">Dari Rumah Untuk Dunia.</span><br>
+            Arsitektur gred industri menggunakan Rust, Tauri, dan SurrealDB.
         </p>
     </header>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+    <!-- Main Blueprint Grid -->
+    <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
         <template x-for="project in projects" :key="project.title">
             <div x-data="{ hover: false }" 
                  @mouseenter="hover = true" 
                  @mouseleave="hover = false"
-                 class="relative p-10 rounded-[3rem] border border-white/5 bg-white/[0.02] backdrop-blur-3xl transition-all duration-700 overflow-hidden group hover:border-sky-500/40 hover:bg-white/[0.04]">
+                 class="glass-card relative p-10 rounded-[3.5rem] transition-all duration-700 overflow-hidden group hover:border-sky-500/40 hover:bg-white/[0.04]">
                 
-                <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/[0.05] blur-[80px] group-hover:bg-sky-500/[0.12] transition-all duration-700"></div>
+                <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/[0.05] blur-[80px] group-hover:bg-sky-500/[0.15] transition-all duration-700"></div>
 
                 <div class="relative z-10 flex flex-col h-full space-y-8">
                     <div class="flex justify-between items-start">
-                        <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-2xl transition-all duration-700" :class="hover && 'scale-110 shadow-sky-500/50 rotate-3'">
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-700 shadow-2xl transition-all duration-700" :class="hover && 'scale-110 shadow-sky-500/50 -rotate-3'">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="project.icon"></path>
                             </svg>
                         </div>
-                        <span class="text-[9px] tracking-widest text-white/10 uppercase font-bold">Secure Node</span>
+                        <span class="text-[9px] tracking-widest text-white/10 uppercase font-bold">Node Ready</span>
                     </div>
 
                     <div class="flex-grow">
                         <h2 class="text-2xl font-semibold tracking-tight text-white/90 mb-6" x-text="project.title"></h2>
-                        
                         <ul class="space-y-5">
                             <template x-for="step in project.steps" :key="step.label">
-                                <li class="group/item">
+                                <li>
                                     <span class="block text-[10px] font-bold text-sky-500/60 uppercase tracking-widest mb-1" x-text="step.label"></span>
-                                    <p class="text-[13px] text-white/40 leading-relaxed font-light group-hover/item:text-white/80 transition-colors" x-text="step.text"></p>
+                                    <p class="text-[13px] text-white/40 leading-relaxed font-light" x-text="step.text"></p>
                                 </li>
                             </template>
                         </ul>
                     </div>
-
-                    <div class="pt-6 flex items-center gap-4">
-                        <div class="h-[1px] flex-1 bg-white/5 overflow-hidden">
-                            <div class="h-full bg-sky-500 transition-all duration-1000 ease-out" :style="hover ? 'width: 100%' : 'width: 15%'"></div>
-                        </div>
-                        <span class="text-[9px] font-mono tracking-tighter text-sky-500/80" x-text="hover ? 'SYNCING...' : 'ENCRYPTED'"></span>
-                    </div>
                 </div>
             </div>
         </template>
+    </main>
+
+    <!-- Technical Stack Section (The World Class Layer) -->
+    <div class="max-w-4xl mx-auto mt-20 p-8 rounded-[2rem] border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
+        <h3 class="text-center text-[10px] tracking-[0.5em] uppercase text-white/20 mb-8 font-bold">System Core Architecture</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <template x-for="tech in stack" :key="tech.name">
+                <div class="text-center space-y-2">
+                    <div class="text-sky-400 font-semibold text-sm tracking-tight" x-text="tech.name"></div>
+                    <p class="text-[11px] text-white/30 font-light leading-tight" x-text="tech.desc"></p>
+                </div>
+            </template>
+        </div>
     </div>
 
+    <!-- Footer -->
     <footer class="mt-24 text-center space-y-6 pb-12">
         <div x-data="{ 
                 dateTime: '',
@@ -133,8 +147,8 @@
             KUALA LUMPUR // <span class="text-sky-500/50" x-text="dateTime"></span>
         </div>
         
-        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light">
-            &copy; 2026 World Smart Eye Blueprint — Developed by <span class="text-sky-500/60 font-semibold tracking-normal">Shift_Dev.js</span>
+        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light italic">
+            &copy; 2026 World Smart Eye Blueprint — Engineered by <span class="text-sky-500/60 font-semibold not-italic">Shift_Dev.js</span>
         </div>
     </footer>
 

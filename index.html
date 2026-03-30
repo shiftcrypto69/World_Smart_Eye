@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Smart Eye | Shift_Dev.js Masterplan</title>
+    <title>World Smart Eye | Shift_Dev.js Elite</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -11,95 +11,216 @@
     
     <style>
         body { font-family: 'Geist', 'Google Sans', sans-serif; letter-spacing: -0.02em; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-border { box-shadow: 0 0 15px rgba(14, 165, 233, 0.1); }
         [x-cloak] { display: none !important; }
-        .text-shadow { text-shadow: 0 0 20px rgba(14, 165, 233, 0.5); }
+        
+        /* Animation untuk AI Pulse */
+        @keyframes pulse-sky {
+            0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(14, 165, 233, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+        }
+        .ai-active { animation: pulse-sky 2s infinite; }
     </style>
 </head>
-<body class="min-h-screen text-white/90 flex flex-col justify-between" 
+<body class="min-h-screen text-white/90 flex flex-col" 
       x-data="{ 
         view: 'home', 
         selectedPhase: null,
+        logs: ['System Initialized...', 'Gateway Banting Online', 'Rust Core: Optimized'],
         phases: [
-            { id: 1, title: 'Intelligence Hub', icon: 'M13 10V3L4 14h7v7l9-11h-7z', desc: 'Sektor Utama Industri & Kediaman', details: ['Industry: Hikvision PoE & Python LPR', 'Retail: People Counting Analytics', 'Corporate: Face Recognition Terminals', 'Home Living: Telegram Bot Snapshot'] },
-            { id: 2, title: 'Hardware Core', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', desc: 'Pemilihan Sensor & Optik Gred Tinggi', details: ['4K Ultra HD Low Light Sensors', 'Industrial PoE Switches', 'Thermal Imaging Integration', 'Backup Power Management'] },
-            { id: 3, title: 'Connectivity', icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0M2.828 9.9a15 15 0 0121.214 0', desc: 'Networking & Secure Tunneling', details: ['Secure VPN Tunneling', 'Archer C54 Bridge Mode', 'Dynamic DNS Setup', 'End-to-End Encryption'] },
-            { id: 4, title: 'AI Inference', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', desc: 'Object Detection & LPR Engine', details: ['YOLOv8 Real-time Detection', 'ONNX Runtime Optimization', 'Automated Plate Recognition', 'Human Behavior Analysis'] },
-            { id: 5, title: 'Database Layer', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4', desc: 'SurrealDB Real-time Sync', details: ['Graph Database Relations', 'Event-Driven Archiving', 'Multi-Node Synchronization', 'Instant Search Indexing'] },
-            { id: 6, title: 'Desktop Deployment', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', desc: 'Tauri & Rust Compilation', details: ['Cross-Platform Build (Win/Mac)', 'Resource-Efficient Binary', 'System Tray Background Ops', 'Auto-Update Capability'] },
-            { id: 7, title: 'Global Expansion', icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9', desc: 'Monitoring Merentasi Dunia', details: ['Multi-Site Command Center', 'Global Latency Optimization', 'Enterprise User Management', 'Cloud Hybrid Integration'] }
-        ]
+            { 
+                id: 1, 
+                title: 'Intelligence Hub', 
+                icon: 'M13 10V3L4 14h7v7l9-11h-7z', 
+                desc: 'Pusat Kawalan Utama Sektor.',
+                details: [
+                    { label: 'Industry', val: 'Hikvision PoE + Python LPR' },
+                    { label: 'Retail', val: 'People Counting AI Analytics' },
+                    { label: 'Corporate', val: 'Face Recognition Terminals' },
+                    { label: 'Home', val: 'Archer C54 + Telegram Bot' }
+                ]
+            },
+            { 
+                id: 2, 
+                title: 'Hardware Core', 
+                icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z', 
+                desc: 'Pemilihan Sensor Gred Industri.',
+                details: [
+                    { label: 'Sensor', val: '4K Ultra HD Low Light' },
+                    { label: 'Switch', val: 'Industrial PoE Managed' },
+                    { label: 'Storage', val: 'Skyhawk Health Monitoring' },
+                    { label: 'Optics', val: 'Varifocal Motorized Lens' }
+                ]
+            },
+            { 
+                id: 3, 
+                title: 'Connectivity', 
+                icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0', 
+                desc: 'Rangkaian Selamat & Berenkripsi.',
+                details: [
+                    { label: 'Tunnel', val: 'WireGuard VPN Integration' },
+                    { label: 'Protocol', val: 'RTSP over HTTPS' },
+                    { label: 'Security', val: 'AES-256 Bit Encryption' },
+                    { label: 'Latency', val: 'Sub-200ms Global Sync' }
+                ]
+            },
+            { 
+                id: 4, 
+                title: 'AI Inference', 
+                icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3', 
+                desc: 'Enjin Pintar Pengesanan Objek.',
+                details: [
+                    { label: 'Model', val: 'YOLOv8 Custom Trained' },
+                    { label: 'Inference', val: 'ONNX Runtime (GPU Accel)' },
+                    { label: 'Alerts', val: 'Smart Motion Masking' },
+                    { label: 'Compute', val: 'Edge AI Processing' }
+                ]
+            },
+            { 
+                id: 5, 
+                title: 'Database Layer', 
+                icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7', 
+                desc: 'Simpanan Data Multi-Model.',
+                details: [
+                    { label: 'Engine', val: 'SurrealDB Cloud-Native' },
+                    { label: 'Data', val: 'Graph-Relational Mapping' },
+                    { label: 'Sync', val: 'Bidirectional Real-time' },
+                    { label: 'Log', val: 'Immutable Audit Trail' }
+                ]
+            },
+            { 
+                id: 6, 
+                title: 'Deployment', 
+                icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18', 
+                desc: 'Aplikasi Desktop & Cloud.',
+                details: [
+                    { label: 'Platform', val: 'Tauri + Rust Framework' },
+                    { label: 'Binary', val: 'Lightweight Executable (.exe)' },
+                    { label: 'Update', val: 'OTA (Over-The-Air) Updates' },
+                    { label: 'Resource', val: 'Low Memory Footprint' }
+                ]
+            },
+            { 
+                id: 7, 
+                title: 'Global Vision', 
+                icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3', 
+                desc: 'Ekosistem Pantauan Sejagat.',
+                details: [
+                    { label: 'Scalability', val: 'Multi-Region Nodes' },
+                    { label: 'Access', val: 'Role-Based Control (RBAC)' },
+                    { label: 'API', val: 'Restful JSON Gateway' },
+                    { label: 'Vision', val: 'World Class Infrastructure' }
+                ]
+            }
+        ],
+        addLog(msg) {
+            this.logs.unshift(msg);
+            if(this.logs.length > 5) this.logs.pop();
+        }
       }">
 
-    <!-- HOME VIEW -->
-    <div x-show="view === 'home'" x-transition.opacity.duration.500ms class="p-8 md:p-16">
-        <header class="max-w-6xl mx-auto mb-16 text-center space-y-6">
-            <div class="inline-block p-1 px-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.4em] uppercase mb-2">
-                Shift_Dev.js // Roadmap 2026
+    <div class="fixed top-6 right-6 z-50 hidden md:block">
+        <div class="glass p-4 rounded-2xl w-64 space-y-2 border-sky-500/20">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                <span class="text-[10px] font-bold tracking-widest text-white/40 uppercase">System Logs</span>
             </div>
-            <h1 class="text-6xl md:text-8xl font-light tracking-tighter uppercase">
-                World <span class="font-semibold text-sky-500 italic text-shadow">Smart Eye</span>
-            </h1>
-            <p class="text-white/40 max-w-2xl mx-auto font-light text-lg italic">
-                "Sistem Pengawasan Pintar: <span class="text-white/80 not-italic">Dari Rumah Untuk Dunia.</span>"
-            </p>
-        </header>
-
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <template x-for="phase in phases" :key="phase.id">
-                <div @click="view = 'detail'; selectedPhase = phase" 
-                     class="glass p-8 rounded-[2.5rem] cursor-pointer hover:border-sky-500/50 hover:bg-white/[0.04] transition-all group relative overflow-hidden">
-                    <div class="absolute -top-12 -left-12 w-32 h-32 bg-sky-500/5 blur-3xl group-hover:bg-sky-500/10 transition-all"></div>
-                    <div class="mb-6 p-4 w-fit rounded-2xl bg-gradient-to-br from-sky-400 to-blue-700 shadow-xl group-hover:rotate-6 transition-transform">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="phase.icon"></path></svg>
-                    </div>
-                    <span class="text-[10px] text-white/20 font-bold tracking-[0.2em] uppercase">Phase 0<span x-text="phase.id"></span></span>
-                    <h2 class="text-xl font-semibold mt-2 tracking-tight" x-text="phase.title"></h2>
-                    <p class="text-xs text-white/40 mt-3 font-light leading-relaxed" x-text="phase.desc"></p>
-                </div>
+            <template x-for="log in logs" :key="log">
+                <div class="text-[9px] font-mono text-sky-400/70" x-text="`> ${log}`"></div>
             </template>
         </div>
     </div>
 
-    <!-- DETAIL VIEW -->
-    <div x-show="view === 'detail'" x-cloak x-transition.opacity.duration.500ms class="p-8 md:p-16 flex flex-col items-center justify-center min-h-[70vh]">
-        <div class="max-w-4xl w-full glass p-10 md:p-16 rounded-[4rem] space-y-10 relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-80 h-80 bg-sky-500/10 blur-[120px]"></div>
-            
-            <button @click="view = 'home'" class="flex items-center gap-3 text-sky-400 text-xs font-bold tracking-widest hover:text-sky-300 transition-all group">
-                <svg class="w-4 h-4 group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                BACK TO MAIN TOPIC
-            </button>
+    <div class="flex-grow flex flex-col">
+        
+        <div x-show="view === 'home'" x-transition.opacity.duration.500ms class="p-8 md:p-16">
+            <header class="max-w-6xl mx-auto mb-20 text-center space-y-8">
+                <div @click="addLog('Banting Node Pinged')" class="cursor-pointer inline-block p-1 px-5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.5em] uppercase mb-4 neon-border">
+                    Central Intelligence // Shift_Dev.js
+                </div>
+                <h1 class="text-7xl md:text-9xl font-light tracking-tighter uppercase leading-none">
+                    World <span class="font-semibold text-sky-500 italic">Smart Eye</span>
+                </h1>
+                <p class="text-white/30 max-w-2xl mx-auto font-light text-xl leading-relaxed">
+                    "Sistem Pengawasan Pintar: <span class="text-white/70">Dari Rumah Untuk Dunia.</span>"
+                </p>
+            </header>
 
-            <div class="space-y-4">
-                <h3 class="text-sky-500/50 uppercase tracking-[0.5em] text-[10px] font-bold">Technical Stack // 0<span x-text="selectedPhase?.id"></span></h3>
-                <h2 class="text-5xl md:text-7xl font-light tracking-tighter" x-text="selectedPhase?.title"></h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-white/10">
-                <template x-for="detail in selectedPhase?.details" :key="detail">
-                    <div class="group/item p-4 rounded-3xl hover:bg-white/[0.02] transition-colors">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-sky-500"></div>
-                            <span class="text-[10px] font-bold text-white/20 uppercase tracking-widest">Active Module</span>
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <template x-for="phase in phases" :key="phase.id">
+                    <div @click="view = 'detail'; selectedPhase = phase; addLog('Accessed Phase ' + phase.id)" 
+                         class="glass p-10 rounded-[3rem] cursor-pointer hover:border-sky-500/50 hover:bg-white/[0.05] transition-all group relative overflow-hidden border-white/5">
+                        
+                        <div class="absolute -top-12 -left-12 w-32 h-32 bg-sky-500/5 blur-3xl group-hover:bg-sky-500/15 transition-all"></div>
+                        
+                        <div class="mb-8 p-5 w-fit rounded-3xl bg-gradient-to-br from-sky-400 to-blue-800 shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ai-active">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="phase.icon"></path>
+                            </svg>
                         </div>
-                        <p class="text-white/70 font-light text-lg" x-text="detail"></p>
+                        
+                        <div class="space-y-2">
+                            <span class="text-[10px] text-sky-500/50 font-bold tracking-[0.3em] uppercase">Phase 0<span x-text="phase.id"></span></span>
+                            <h2 class="text-2xl font-semibold tracking-tight" x-text="phase.title"></h2>
+                            <p class="text-sm text-white/30 font-light leading-relaxed" x-text="phase.desc"></p>
+                        </div>
+
+                        <div class="mt-8 flex items-center justify-between">
+                            <span class="text-[9px] text-white/10 font-mono tracking-tighter italic">READY FOR DEPLOYMENT</span>
+                            <svg class="w-4 h-4 text-white/10 group-hover:text-sky-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </div>
                     </div>
                 </template>
             </div>
         </div>
+
+        <div x-show="view === 'detail'" x-cloak x-transition.opacity.duration.500ms class="p-8 md:p-16 flex flex-col items-center justify-center min-h-[80vh]">
+            <div class="max-w-5xl w-full glass p-12 md:p-20 rounded-[5rem] space-y-12 relative overflow-hidden border-white/10 shadow-2xl">
+                <div class="absolute -top-32 -right-32 w-96 h-96 bg-sky-500/10 blur-[150px]"></div>
+                
+                <button @click="view = 'home'; addLog('Returned to Root')" class="flex items-center gap-4 text-sky-500 text-xs font-bold tracking-[0.3em] hover:text-sky-300 transition-all group uppercase">
+                    <div class="p-2 rounded-full border border-sky-500/20 group-hover:bg-sky-500/10">
+                        <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </div>
+                    BACK TO MAIN TOPIC
+                </button>
+
+                <div class="space-y-4">
+                    <h3 class="text-sky-500/40 uppercase tracking-[0.6em] text-[11px] font-bold">Shift_Dev Architecture // 0<span x-text="selectedPhase?.id"></span></h3>
+                    <h2 class="text-6xl md:text-8xl font-light tracking-tighter leading-none text-white" x-text="selectedPhase?.title"></h2>
+                    <p class="text-white/40 text-xl font-light italic" x-text="selectedPhase?.desc"></p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 pt-12 border-t border-white/5">
+                    <template x-for="detail in selectedPhase?.details" :key="detail.label">
+                        <div class="group/item p-6 rounded-[2rem] hover:bg-white/[0.03] border border-transparent hover:border-white/5 transition-all">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-2 h-2 rounded-full bg-sky-500 shadow-[0_0_12px_rgba(14,165,233,0.8)]"></div>
+                                <span class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]" x-text="detail.label"></span>
+                            </div>
+                            <p class="text-white/80 font-light text-2xl tracking-tight" x-text="detail.val"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="p-12 text-center space-y-6">
+    <footer class="p-12 text-center space-y-8 bg-gradient-to-t from-black to-transparent">
         <div x-data="{ dateTime: '' }" x-init="setInterval(() => {
             const now = new Date();
             dateTime = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kuala_Lumpur' }).replace(',', ' //');
-        }, 1000)" class="font-mono text-[10px] text-white/10 tracking-[0.5em] uppercase">
-            BANTING // SELANGOR // <span class="text-sky-500/50" x-text="dateTime"></span>
+        }, 1000)" class="font-mono text-[11px] text-white/20 tracking-[0.6em] uppercase">
+            BANTING // SELANGOR // <span class="text-sky-500 font-bold" x-text="dateTime"></span>
         </div>
-        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light">
-            &copy; 2026 <span class="text-white/40 font-semibold">WORLD SMART EYE</span> — Blueprint by Shift_Dev.js
+        <div class="flex items-center justify-center gap-4">
+            <div class="h-[1px] w-12 bg-white/10"></div>
+            <div class="text-[12px] text-white/30 tracking-[0.3em] font-light">
+                ENGINEERED BY <span class="text-sky-500/60 font-semibold uppercase">Shift_Dev.js</span>
+            </div>
+            <div class="h-[1px] w-12 bg-white/10"></div>
         </div>
     </footer>
 </body>

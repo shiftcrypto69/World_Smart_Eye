@@ -3,97 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Smart Eye | Shift_Dev.js</title>
+    <title>World Smart Eye | Shift_Dev.js Blueprint</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Geist', 'Google Sans', 'Inter', sans-serif; 
+            letter-spacing: -0.02em;
+        }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen text-white/90 p-8 md:p-16 flex flex-col justify-between">
+<body class="min-h-screen text-white/90 p-6 md:p-16 flex flex-col justify-between" x-data="{ 
+    projects: [
+        {
+            title: 'Industry',
+            icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5',
+            steps: [
+                { label: 'Hardware', text: 'Hikvision PoE Industrial Grade' },
+                { label: 'Step 1', text: 'Setup NVR dengan Hard Disk 8TB (Min)' },
+                { label: 'Step 2', text: 'Integrasi Python LPR (License Plate Recognition)' }
+            ]
+        },
+        {
+            title: 'Retail',
+            icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z',
+            steps: [
+                { label: 'Hardware', text: 'Imou/Ezviz WiFi Dome' },
+                { label: 'Step 1', text: 'Cloud Recording & Local SD Card backup' },
+                { label: 'Step 2', text: 'Python People Counting (Data Analitik)' }
+            ]
+        },
+        {
+            title: 'Corporate',
+            icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
+            steps: [
+                { label: 'Hardware', text: 'Face Recognition Terminals' },
+                { label: 'Step 1', text: 'Central Management System (CMS)' },
+                { label: 'Step 2', text: 'Telegram Bot Alert untuk VIP arrival' }
+            ]
+        },
+        {
+            title: 'Home Living',
+            icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+            steps: [
+                { label: 'Hardware', text: 'Smart WiFi Camera (Pan/Tilt)' },
+                { label: 'Step 1', text: 'Sambung WiFi Router Archer C54' },
+                { label: 'Step 2', text: 'Setup World Smart Eye Bot (Snapshot)' }
+            ]
+        }
+    ]
+}">
 
-    <header class="max-w-6xl mx-auto mb-16 text-center space-y-4">
-        <div class="inline-block p-1 px-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.3em] uppercase mb-4">
-            Global Surveillance Hub // Shift_Dev.js
+    <header class="max-w-6xl mx-auto mb-16 text-center space-y-6">
+        <div class="inline-block p-1 px-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.4em] uppercase mb-2">
+            Central Intelligence Hub // Shift_Dev.js
         </div>
-        <h1 class="text-4xl md:text-6xl font-extralight tracking-tighter">
+        <h1 class="text-5xl md:text-7xl font-light tracking-tighter">
             WORLD <span class="font-semibold text-sky-500">SMART EYE</span>
         </h1>
-        <p class="text-white/40 max-w-xl mx-auto font-light leading-relaxed">
-            Sistem Pengawasan Pintar: Dari Rumah Untuk Dunia. Dipacu oleh Python, AI & Integriti Data.
+        <p class="text-white/40 max-w-2xl mx-auto font-light text-lg leading-relaxed">
+            Sistem Pengawasan Pintar: <span class="text-white/70 font-normal">Dari Rumah Untuk Dunia.</span><br>
+            Blueprint integrasi data industri, perniagaan, dan kediaman.
         </p>
     </header>
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" 
-         x-data="{ 
-            categories: [
-                { title: 'Industry', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5', detail: 'Hikvision PoE, LPR Integration, Industrial Alert.' },
-                { title: 'Retail', icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z', detail: 'WiFi Management, People Counting, Analytics.' },
-                { title: 'Corporate', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', detail: 'Face Recognition, VPN Secure, HR Integration.' },
-                { title: 'Home Living', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', detail: 'Private Bot, Motion Alert, Remote Access.' }
-            ]
-         }">
-        
-        <template x-for="item in categories" :key="item.title">
-            <div x-data="{ active: false }" 
-                 @mouseenter="active = true" 
-                 @mouseleave="active = false"
-                 class="relative p-8 rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-500 cursor-pointer overflow-hidden group hover:border-sky-500/50 hover:shadow-2xl hover:shadow-sky-500/10">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+        <template x-for="project in projects" :key="project.title">
+            <div x-data="{ hover: false }" 
+                 @mouseenter="hover = true" 
+                 @mouseleave="hover = false"
+                 class="relative p-10 rounded-[3rem] border border-white/5 bg-white/[0.02] backdrop-blur-3xl transition-all duration-700 overflow-hidden group hover:border-sky-500/40 hover:bg-white/[0.04]">
                 
-                <div class="absolute -top-20 -left-20 w-40 h-40 bg-sky-500/5 blur-[60px] group-hover:bg-sky-500/15 transition-all"></div>
+                <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/[0.05] blur-[80px] group-hover:bg-sky-500/[0.12] transition-all duration-700"></div>
 
-                <div class="relative z-10 space-y-6">
+                <div class="relative z-10 flex flex-col h-full space-y-8">
                     <div class="flex justify-between items-start">
-                        <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-xl transition-transform duration-500" :class="active && 'scale-110 rotate-3'">
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-2xl transition-all duration-700" :class="hover && 'scale-110 shadow-sky-500/50 rotate-3'">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="item.icon"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="project.icon"></path>
                             </svg>
                         </div>
-                        <span class="text-[9px] tracking-widest text-white/20 uppercase font-bold">Encrypted</span>
+                        <span class="text-[9px] tracking-widest text-white/10 uppercase font-bold">Secure Node</span>
                     </div>
 
-                    <div>
-                        <h2 class="text-xl font-light" x-text="item.title"></h2>
-                        <p class="text-xs text-white/40 mt-2 leading-relaxed" x-text="item.detail"></p>
+                    <div class="flex-grow">
+                        <h2 class="text-2xl font-semibold tracking-tight text-white/90 mb-6" x-text="project.title"></h2>
+                        
+                        <ul class="space-y-5">
+                            <template x-for="step in project.steps" :key="step.label">
+                                <li class="group/item">
+                                    <span class="block text-[10px] font-bold text-sky-500/60 uppercase tracking-widest mb-1" x-text="step.label"></span>
+                                    <p class="text-[13px] text-white/40 leading-relaxed font-light group-hover/item:text-white/80 transition-colors" x-text="step.text"></p>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
 
-                    <div class="pt-4 flex items-center gap-3">
-                        <div class="h-[2px] flex-1 bg-white/5 rounded-full overflow-hidden">
-                            <div class="h-full bg-sky-500 transition-all duration-1000" :style="active ? 'width: 100%' : 'width: 20%'"></div>
+                    <div class="pt-6 flex items-center gap-4">
+                        <div class="h-[1px] flex-1 bg-white/5 overflow-hidden">
+                            <div class="h-full bg-sky-500 transition-all duration-1000 ease-out" :style="hover ? 'width: 100%' : 'width: 15%'"></div>
                         </div>
-                        <span class="text-[9px] font-mono text-sky-500" x-text="active ? 'ACTIVE' : 'STANDBY'"></span>
+                        <span class="text-[9px] font-mono tracking-tighter text-sky-500/80" x-text="hover ? 'SYNCING...' : 'ENCRYPTED'"></span>
                     </div>
                 </div>
             </div>
         </template>
     </div>
 
-    <footer class="mt-20 text-center space-y-4">
+    <footer class="mt-24 text-center space-y-6 pb-12">
         <div x-data="{ 
                 dateTime: '',
                 updateTime() {
                     const now = new Date();
                     const options = { 
-                        day: '2-digit', 
-                        month: '2-digit', 
-                        year: 'numeric',
-                        hour: '2-digit', 
-                        minute: '2-digit', 
-                        second: '2-digit',
-                        hour12: true,
-                        timeZone: 'Asia/Kuala_Lumpur'
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: true, timeZone: 'Asia/Kuala_Lumpur'
                     };
                     this.dateTime = now.toLocaleString('en-GB', options).replace(',', ' //');
                 }
              }" 
              x-init="updateTime(); setInterval(() => updateTime(), 1000)"
-             class="font-mono text-[11px] text-white/20 tracking-[0.3em] uppercase">
-            KUALA LUMPUR STATION // <span class="text-sky-500/60" x-text="dateTime"></span>
+             class="font-mono text-[10px] text-white/10 tracking-[0.5em] uppercase">
+            KUALA LUMPUR // <span class="text-sky-500/50" x-text="dateTime"></span>
         </div>
         
-        <div class="text-[10px] text-white/10 tracking-widest uppercase pb-4">
-            &copy; 2026 World Smart Eye Blueprint - Project by <span class="text-white/30">Shift_Dev.js</span>
+        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light">
+            &copy; 2026 World Smart Eye Blueprint — Developed by <span class="text-sky-500/60 font-semibold tracking-normal">Shift_Dev.js</span>
         </div>
     </footer>
 

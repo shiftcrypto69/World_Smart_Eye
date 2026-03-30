@@ -3,302 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Smart Eye | Shift_Dev.js Ultra-Grade</title>
+    <title>World Smart Eye | Shift_Dev.js Enterprise 700</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;300;400;600&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;300;400;600;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
     
     <style>
-        :root { --sky-primary: #0ea5e9; --glass-bg: rgba(255, 255, 255, 0.015); }
-        body { font-family: 'Geist', sans-serif; letter-spacing: -0.03em; -webkit-font-smoothing: antialiased; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        
-        /* UI EFFECTS */
-        .glass { background: var(--glass-bg); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .neon-text { text-shadow: 0 0 15px rgba(14, 165, 233, 0.6); }
-        .scanline { background: linear-gradient(to bottom, transparent 50%, rgba(14, 165, 233, 0.05) 50%); background-size: 100% 4px; pointer-events: none; }
-        
-        /* ANIMATIONS */
-        @keyframes radar {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
+        /* ---------------------------------------------------------
+           GLOBAL DESIGN TOKENS
+           --------------------------------------------------------- */
+        :root {
+            --sky-500: #0ea5e9;
+            --sky-600: #0284c7;
+            --glass-bg: rgba(255, 255, 255, 0.015);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --surface-primary: #020202;
         }
-        .radar-pulse { position: absolute; border: 1px solid var(--sky-primary); border-radius: 50%; animation: radar 2s infinite; }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .float { animation: float 6s ease-in-out infinite; }
+
+        body {
+            font-family: 'Geist', sans-serif;
+            letter-spacing: -0.03em;
+            -webkit-font-smoothing: antialiased;
+            color: rgba(255, 255, 255, 0.9);
+            background-color: var(--surface-primary);
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ---------------------------------------------------------
+           COMPONENTS & UTILITIES
+           --------------------------------------------------------- */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* ---------------------------------------------------------
+           ANIMATION KEYFRAMES
+           --------------------------------------------------------- */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scanline-effect {
+            background: linear-gradient(to bottom, transparent 50%, rgba(14, 165, 233, 0.05) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        @keyframes radar-ping {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+
+        .ping-circle {
+            position: absolute;
+            border: 1px solid var(--sky-500);
+            border-radius: 50%;
+            animation: radar-ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes neural-pulse {
+            0% { stroke-dashoffset: 1000; opacity: 0.2; }
+            50% { opacity: 0.5; }
+            100% { stroke-dashoffset: 0; opacity: 0.2; }
+        }
+
+        .neural-path {
+            stroke-dasharray: 1000;
+            animation: neural-pulse 8s linear infinite;
+        }
+
+        /* ---------------------------------------------------------
+           CUSTOM SCROLLBAR
+           --------------------------------------------------------- */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(14, 165, 233, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(14, 165, 233, 0.5); }
 
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen text-white/90 flex flex-col overflow-x-hidden" 
-      x-data="{ 
-        view: 'home', 
-        selectedPhase: null,
-        sysStatus: 'OPTIMIZED',
-        aiLoad: 42,
-        logs: ['[SYS] Initializing World Smart Eye...', '[NET] Banting Node 01 Connected', '[AI] YOLOv8 Engine Standby'],
-        
-        phases: [
-            { 
-                id: 1, title: 'Intelligence Hub', icon: 'M13 10V3L4 14h7v7l9-11h-7z', 
-                desc: 'Pusat integrasi sektor kritikal.',
-                tech: 'Rust Core API',
-                details: [
-                    { label: 'Industry', val: 'Hikvision PoE + LPR Python', status: 'ACTIVE' },
-                    { label: 'Retail', val: 'Demographics & Flow AI', status: 'STANDBY' },
-                    { label: 'Corporate', val: 'Biometric Access Control', status: 'SECURE' },
-                    { label: 'Home', val: 'Archer C54 IoT Gateway', status: 'ONLINE' }
-                ]
-            },
-            { 
-                id: 2, title: 'Hardware Core', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3', 
-                desc: 'Gred industri sensor & optik.',
-                tech: 'Edge Computing',
-                details: [
-                    { label: 'Optics', val: '4K Motorized Varifocal', status: 'CALIBRATED' },
-                    { label: 'Detection', val: 'PIR + Thermal Dual-Sensor', status: 'READY' },
-                    { label: 'Switching', val: 'Layer 3 Managed PoE+', status: 'LINKED' },
-                    { label: 'Backplane', val: 'SFP+ 10Gbps Uplink', status: 'STABLE' }
-                ]
-            },
-            { 
-                id: 3, title: 'Connectivity', icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01', 
-                desc: 'Rangkaian kebal & enkripsi.',
-                tech: 'WireGuard Mesh',
-                details: [
-                    { label: 'VPN Tunnel', val: 'End-to-End Encrypted WireGuard', status: 'TUNNELED' },
-                    { label: 'Syncing', val: 'P2P Real-time Data Relay', status: 'SYNC' },
-                    { label: 'Routing', val: 'Smart Load Balancing (Banting)', status: 'ACTIVE' },
-                    { label: 'Encryption', val: 'AES-GCM 256-bit Hardware', status: 'HARDENED' }
-                ]
-            },
-            { 
-                id: 4, title: 'AI Inference', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707', 
-                desc: 'Analitik visual masa nyata.',
-                tech: 'ONNX Runtime',
-                details: [
-                    { label: 'Vision Model', val: 'YOLOv10 Custom Banting Weights', status: '98.4% CONF' },
-                    { label: 'Compute', val: 'CUDA Acceleration Enabled', status: '0.4ms LAT' },
-                    { label: 'Learning', val: 'Automated Scene Reinforcement', status: 'ACTIVE' },
-                    { label: 'Alerting', val: 'Smart Snapshot Telegram Bot', status: 'CONNECTED' }
-                ]
-            },
-            { 
-                id: 5, title: 'Database Layer', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7', 
-                desc: 'Arsitektur data berprestasi tinggi.',
-                tech: 'SurrealDB Rust',
-                details: [
-                    { label: 'Storage', val: 'Graph-Document Hybrid DB', status: 'INDEXED' },
-                    { label: 'Events', val: 'Live Stream Metadata Archiving', status: 'SAVING' },
-                    { label: 'Scalability', val: 'Horizontal Sharding Nodes', status: 'BALANCED' },
-                    { label: 'Backup', val: 'Immutable Log Snapshot', status: 'VERIFIED' }
-                ]
-            },
-            { 
-                id: 6, title: 'Desktop Tauri', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18', 
-                desc: 'Aplikasi asli Windows & Mac.',
-                tech: 'Rust + WebView2',
-                details: [
-                    { label: 'Build', val: 'Native Binary Execution', status: '5.2MB' },
-                    { label: 'System', val: 'Low-level Hardware Access', status: 'ALLOWED' },
-                    { label: 'UI Enjin', val: 'GPU Accelerated Tailwind UI', status: '120 FPS' },
-                    { label: 'Shell', val: 'Safe Command Execution', status: 'SECURE' }
-                ]
-            },
-            { 
-                id: 7, title: 'Global Vision', icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9', 
-                desc: 'Pantauan sempadan antarabangsa.',
-                tech: 'Cloud Hybrid',
-                details: [
-                    { label: 'Multi-Node', val: 'Global Surveillance Command', status: 'EXPANDING' },
-                    { label: 'Security', val: 'Zero Trust Access Protocol', status: 'ENFORCED' },
-                    { label: 'Latency', val: 'Optimized Edge CDN Delivery', status: '34ms' },
-                    { label: 'Compliance', val: 'Global Privacy Shield Ready', status: 'CERTIFIED' }
-                ]
-            }
-        ],
+<body class="min-h-screen flex flex-col overflow-x-hidden" 
+      x-data="systemState()" 
+      x-init="initSystem()">
 
-        addLog(msg) {
-            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            this.logs.unshift(`[${time}] ${msg}`);
-            if(this.logs.length > 8) this.logs.pop();
-        },
-
-        init() {
-            setInterval(() => {
-                this.aiLoad = Math.floor(Math.random() * (48 - 42 + 1) + 42);
-                if(Math.random() > 0.8) this.addLog('AI Inference: Pattern Matched');
-            }, 3000);
-        }
-      }">
-
-    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-sky-500/10 blur-[120px] rounded-full"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
-        <div class="scanline absolute inset-0 opacity-20"></div>
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-sky-500/5 blur-[160px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/5 blur-[160px] rounded-full"></div>
+        <div class="scanline-effect absolute inset-0 opacity-20"></div>
     </div>
 
-    <nav class="relative z-50 p-6 flex justify-between items-center border-b border-white/5 glass">
-        <div class="flex items-center gap-4">
-            <div class="relative w-10 h-10">
-                <div class="radar-pulse w-full h-full"></div>
-                <div class="relative z-10 w-full h-full bg-sky-500 rounded-full flex items-center justify-center shadow-lg shadow-sky-500/50">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+    <nav class="relative z-50 glass border-b border-white/5 px-8 py-5">
+        <div class="max-w-[1600px] mx-auto flex justify-between items-center">
+            
+            <div class="flex items-center gap-6">
+                <div class="relative w-12 h-12">
+                    <div class="ping-circle w-full h-full"></div>
+                    <div class="ping-circle w-full h-full" style="animation-delay: 1s"></div>
+                    <div class="relative z-10 w-full h-full bg-sky-500 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(14,165,233,0.4)]">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tighter uppercase leading-none">
+                        W.S.E <span class="text-sky-500 italic">Core</span>
+                    </h1>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                        <p class="text-[9px] mono text-white/30 uppercase tracking-[0.3em]">Primary Node: Rumah // Shift_Dev.js</p>
+                    </div>
                 </div>
             </div>
-            <div>
-                <h1 class="text-lg font-bold tracking-tighter">W.S.E // <span class="text-sky-500">SHIFT_DEV.JS</span></h1>
-                <p class="text-[9px] mono text-white/30 uppercase tracking-[0.3em]">Banting Secure Node v4.0</p>
+
+            <div class="hidden xl:flex items-center gap-12">
+                <div class="space-y-1">
+                    <p class="text-[9px] mono text-white/20 uppercase tracking-widest text-right">AI_INFERENCE_ENGINE</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-32 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-sky-500 transition-all duration-1000" :style="`width: ${aiLoad}%` font-bold"></div>
+                        </div>
+                        <span class="mono text-xs text-sky-400 font-bold" x-text="`${aiLoad}%` font-bold"></span>
+                    </div>
+                </div>
+                
+                <div class="h-10 w-[1px] bg-white/10"></div>
+
+                <div class="flex flex-col items-end">
+                    <p class="text-[9px] mono text-white/20 uppercase tracking-widest">Global_Status</p>
+                    <button @click="toggleAlert()" class="text-xs font-bold transition-all hover:text-white" :class="sysStatus === 'SECURE' ? 'text-green-500' : 'text-red-500'">
+                        <span class="underline decoration-2" x-text="sysStatus"></span>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="hidden md:flex gap-8 mono text-[10px] tracking-widest text-white/40">
-            <div class="flex flex-col items-end">
-                <span>AI_CORE_LOAD</span>
-                <span class="text-sky-500 font-bold" x-text="`${aiLoad}%` font-bold"></span>
-            </div>
-            <div class="flex flex-col items-end border-l border-white/10 pl-8">
-                <span>SYS_STATUS</span>
-                <span class="text-green-500 font-bold underline" x-text="sysStatus"></span>
+
+            <div class="flex items-center gap-4 border-l border-white/5 pl-8">
+                <div class="text-right hidden sm:block">
+                    <p class="text-[10px] font-bold text-white/80 uppercase">Administrator</p>
+                    <p class="text-[8px] mono text-white/30 uppercase tracking-tighter">Access Level: 0x007</p>
+                </div>
+                <div class="w-10 h-10 rounded-xl glass border-white/10 flex items-center justify-center text-sky-500 font-bold">
+                    U
+                </div>
             </div>
         </div>
     </nav>
 
     <main class="relative z-10 flex-grow">
         
-        <div x-show="view === 'home'" x-transition.opacity.duration.500ms class="p-8 md:p-20">
-            <header class="max-w-5xl mx-auto mb-24 text-center">
-                <div class="inline-block p-2 px-6 rounded-full glass border-sky-500/30 text-sky-400 text-[10px] tracking-[0.5em] uppercase mb-8 float shadow-xl shadow-sky-500/10">
-                    Road to 999 Lines // World Class Engineering
+        <div x-show="view === 'home'" 
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 translate-y-8"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="p-8 md:p-16 lg:p-24 max-w-[1800px] mx-auto">
+
+            <header class="mb-24 relative">
+                <div class="inline-flex items-center gap-3 p-1.5 pr-6 rounded-full glass border-sky-500/20 mb-8">
+                    <span class="px-3 py-1 rounded-full bg-sky-500 text-[9px] font-black uppercase text-white">Live</span>
+                    <span class="text-[10px] mono text-sky-400 font-bold uppercase tracking-[0.4em]">700_LINES_DEPLOYMENT // SELANGOR</span>
                 </div>
-                <h2 class="text-7xl md:text-[10rem] font-light tracking-tighter leading-none mb-6">
-                    SMART <span class="font-semibold text-sky-500 italic neon-text underline decoration-sky-500/20">EYE</span>
+                <h2 class="text-7xl md:text-[9rem] font-black tracking-tighter leading-[0.85] mb-8 uppercase italic">
+                    World <br> <span class="text-sky-500 not-italic shadow-sky-500/20">Smart Eye</span>
                 </h2>
-                <p class="text-white/30 text-xl md:text-2xl font-light max-w-3xl mx-auto italic">
-                    "Merevolusikan pengawasan pintar dari <span class="text-white/70">Banting</span> hingga ke serata dunia."
-                </p>
+                <div class="flex flex-col md:flex-row md:items-center gap-8">
+                    <p class="text-white/30 text-xl md:text-2xl font-light max-w-2xl leading-relaxed">
+                        Arsitektur pengawasan pintar bertaraf dunia, diuruskan sepenuhnya dari <span class="text-white/80 font-normal">Rumah</span>.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="glass p-4 rounded-2xl min-w-[120px]">
+                            <p class="text-[8px] mono text-white/20 uppercase mb-1 tracking-widest">Nodes_Active</p>
+                            <p class="text-xl font-bold">142</p>
+                        </div>
+                        <div class="glass p-4 rounded-2xl min-w-[120px]">
+                            <p class="text-[8px] mono text-white/20 uppercase mb-1 tracking-widest">Uptime</p>
+                            <p class="text-xl font-bold">99.9%</p>
+                        </div>
+                    </div>
+                </div>
             </header>
 
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                
                 <template x-for="phase in phases" :key="phase.id">
-                    <div @click="view = 'detail'; selectedPhase = phase; addLog('Navigating to ' + phase.title)" 
-                         class="glass p-10 rounded-[3.5rem] cursor-pointer hover:scale-[1.02] hover:border-sky-500/50 transition-all group relative overflow-hidden">
-                        <div class="mb-10 p-5 w-fit rounded-[2rem] bg-gradient-to-br from-sky-400 to-blue-800 shadow-2xl group-hover:rotate-12 transition-transform">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="phase.icon"></path></svg>
-                        </div>
-                        <div class="space-y-4">
-                            <span class="mono text-[10px] text-sky-500/40 tracking-[0.4em] uppercase font-bold">Protocol 0<span x-text="phase.id"></span></span>
-                            <h3 class="text-3xl font-semibold tracking-tight leading-none" x-text="phase.title"></h3>
-                            <p class="text-sm text-white/30 font-light leading-relaxed" x-text="phase.desc"></p>
-                        </div>
-                        <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
-                            <span class="mono text-[9px] text-white/20 uppercase" x-text="phase.tech"></span>
-                            <div class="w-2 h-2 rounded-full bg-sky-500 shadow-[0_0_10px_#0ea5e9]"></div>
+                    <div @click="openPhase(phase)" 
+                         class="glass group relative p-10 rounded-[4rem] cursor-pointer hover:border-sky-500/50 hover:bg-white/[0.04] transition-all duration-700 overflow-hidden">
+                        
+                        <div class="absolute -top-24 -left-24 w-64 h-64 bg-sky-500/[0.03] blur-[100px] group-hover:bg-sky-500/[0.1] transition-all duration-700"></div>
+
+                        <div class="relative z-10">
+                            <div class="mb-12 flex justify-between items-start">
+                                <div class="p-6 rounded-[2rem] bg-gradient-to-br from-sky-400 to-blue-800 shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="phase.icon" />
+                                    </svg>
+                                </div>
+                                <span class="mono text-[10px] text-white/10 font-black group-hover:text-sky-500/40 transition-colors" x-text="`P-0${phase.id}`"></span>
+                            </div>
+
+                            <div class="space-y-4">
+                                <h3 class="text-3xl font-bold tracking-tighter" x-text="phase.title"></h3>
+                                <p class="text-sm text-white/30 font-light leading-relaxed mb-8" x-text="phase.desc"></p>
+                            </div>
+
+                            <div class="mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-[8px] mono text-white/20 uppercase tracking-widest">Stack</span>
+                                    <span class="text-[10px] font-bold text-sky-500/80 uppercase" x-text="phase.tech"></span>
+                                </div>
+                                <div class="w-3 h-3 rounded-full bg-sky-500/20 flex items-center justify-center">
+                                    <div class="w-1 h-1 bg-sky-500 rounded-full"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </template>
 
-                <div class="lg:col-span-1 glass p-10 rounded-[3.5rem] bg-sky-500/5 flex flex-col justify-between border-sky-500/20 group">
-                    <div>
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="mono text-xs text-sky-400 font-bold uppercase tracking-widest">Live Stream</h3>
-                            <div class="flex gap-1">
-                                <div class="w-1 h-1 bg-red-500 animate-pulse"></div>
-                                <div class="w-1 h-1 bg-red-500 animate-pulse delay-75"></div>
-                            </div>
+                <div class="lg:col-span-1 xl:col-span-1 glass-dark p-10 rounded-[4rem] border-sky-500/20 flex flex-col justify-between group overflow-hidden relative shadow-2xl">
+                    <div class="absolute inset-0 bg-sky-500/[0.02] pointer-events-none"></div>
+                    
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <h3 class="mono text-xs text-sky-400 font-black uppercase tracking-[0.3em] flex items-center gap-3">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                </span>
+                                Neural Simulator
+                            </h3>
+                            <span class="text-[9px] mono text-white/20 uppercase">Encrypted_Link</span>
                         </div>
-                        <div class="aspect-video bg-black rounded-3xl relative overflow-hidden border border-white/10 mb-4 shadow-2xl">
-                            <div class="absolute inset-0 scanline opacity-40"></div>
-                            <div class="absolute top-2 left-2 mono text-[8px] text-green-500">CAM_01 // BANTING_HUB</div>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-24 h-24 border border-sky-500/20 rounded-full animate-ping"></div>
-                            </div>
-                            <div class="absolute bottom-2 right-2 flex gap-2">
-                                <div class="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
-                                    <div class="h-full bg-sky-500 animate-[loading_2s_infinite]" style="width: 40%"></div>
+
+                        <div class="flex-grow bg-black/60 rounded-[2.5rem] border border-white/5 relative overflow-hidden mb-8 shadow-inner flex flex-col items-center justify-center">
+                            <div class="absolute inset-0 scanline-effect opacity-30"></div>
+                            
+                            <svg class="w-full h-32 opacity-20" viewBox="0 0 1000 200">
+                                <path class="neural-path" d="M0,100 C150,200 350,0 500,100 C650,200 850,0 1000,100" fill="none" stroke="#0ea5e9" stroke-width="2" />
+                            </svg>
+                            
+                            <div class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+                                <p class="mono text-[10px] text-sky-500 font-bold animate-pulse tracking-[0.5em]">RUMAH_NODE_01</p>
+                                <div class="flex gap-1 text-[8px] mono text-white/20">
+                                    <span>2.8125° N</span>
+                                    <span>//</span>
+                                    <span>101.5018° E</span>
                                 </div>
                             </div>
+
+                            <div class="absolute top-10 left-10 w-8 h-8 border-t-2 border-l-2 border-sky-500/40"></div>
+                            <div class="absolute bottom-10 right-10 w-8 h-8 border-b-2 border-r-2 border-sky-500/40"></div>
                         </div>
-                        <p class="text-[10px] text-white/30 mono leading-none uppercase tracking-tighter">Lat: 2.8125° N // Long: 101.5018° E</p>
+
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white/5 p-4 rounded-2xl">
+                                    <p class="text-[8px] mono text-white/30 uppercase mb-1">Conf_Rate</p>
+                                    <p class="text-sm font-bold text-sky-400">99.82%</p>
+                                </div>
+                                <div class="bg-white/5 p-4 rounded-2xl">
+                                    <p class="text-[8px] mono text-white/30 uppercase mb-1">Frames_Processed</p>
+                                    <p class="text-sm font-bold tracking-tighter" x-text="framesCount">0</p>
+                                </div>
+                            </div>
+                            <button @click="captureSnapshot()" class="w-full py-5 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 rounded-3xl text-[10px] mono font-black uppercase tracking-[0.4em] transition-all active:scale-95 text-sky-400 shadow-lg">
+                                Take Snapshot
+                            </button>
+                        </div>
                     </div>
-                    <button @click="addLog('Snapshot Captured')" class="w-full mt-6 py-4 glass border-sky-500/20 rounded-2xl text-[10px] mono uppercase tracking-[0.3em] hover:bg-sky-500/10 transition-all active:scale-95">Capture Frame</button>
                 </div>
             </div>
+
+            <section class="mt-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 glass p-12 rounded-[4rem] flex flex-col md:flex-row items-center gap-12">
+                    <div class="w-full md:w-1/3 space-y-4">
+                        <h4 class="text-2xl font-bold tracking-tighter">System Health</h4>
+                        <p class="text-sm text-white/30 font-light">Monitoring prestasi perkakasan dan rangkaian di zon Selangor secara masa nyata.</p>
+                        <div class="pt-4 flex gap-4">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500/20 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500/20 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex-grow grid grid-cols-2 sm:grid-cols-4 gap-8 w-full">
+                        <template x-for="stat in healthStats" :key="stat.label">
+                            <div class="space-y-2">
+                                <p class="text-[9px] mono text-white/20 uppercase tracking-widest" x-text="stat.label"></p>
+                                <p class="text-2xl font-black" x-text="stat.value"></p>
+                                <div class="w-full h-[1px] bg-white/5"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="glass p-12 rounded-[4rem] border-white/5">
+                    <h4 class="mono text-[10px] text-white/20 uppercase tracking-[0.4em] font-bold mb-8 italic">Device_Control</h4>
+                    <div class="space-y-4">
+                        <template x-for="device in devices" :key="device.name">
+                            <div class="flex justify-between items-center p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                                <span class="text-sm font-medium" x-text="device.name"></span>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-[9px] mono text-green-500 font-bold" x-text="device.status"></span>
+                                    <div class="w-8 h-4 rounded-full bg-sky-500/20 relative">
+                                        <div class="absolute right-1 top-1 w-2 h-2 bg-sky-500 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <div x-show="view === 'detail'" x-cloak x-transition.opacity.duration.500ms class="p-8 md:p-24 min-h-[90vh] flex items-center">
-            <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <div x-show="view === 'detail'" 
+             x-cloak
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="p-8 md:p-24 min-h-[90vh] flex items-center justify-center">
+
+            <div class="max-w-[1400px] w-full grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
                 
-                <div class="lg:col-span-4 space-y-12">
-                    <button @click="view = 'home'" class="flex items-center gap-4 text-sky-400 text-[10px] font-bold tracking-[0.5em] hover:text-sky-300 transition-all group uppercase">
-                        <div class="p-3 rounded-2xl border border-sky-500/20 group-hover:bg-sky-500/10 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <div class="lg:col-span-5 space-y-12">
+                    <button @click="view = 'home'; addLog('U-Turn to Hub')" class="flex items-center gap-6 text-sky-500 text-[11px] font-black tracking-[0.5em] uppercase group">
+                        <div class="p-4 rounded-3xl border border-sky-500/20 group-hover:bg-sky-500/10 group-hover:border-sky-500/40 transition-all duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                            </svg>
                         </div>
-                        Back to Command
+                        Back to Command Center
                     </button>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="h-[1px] w-8 bg-sky-500"></div>
-                            <span class="mono text-[10px] text-sky-500 font-bold uppercase tracking-widest" x-text="`Protocol 0${selectedPhase?.id}`"></span>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="h-[2px] w-12 bg-sky-500 shadow-[0_0_15px_#0ea5e9]"></div>
+                            <span class="mono text-xs text-sky-500 uppercase tracking-[0.5em] font-black" x-text="`ARCH_UNIT 0${selectedPhase?.id}`"></span>
                         </div>
-                        <h2 class="text-6xl md:text-8xl font-light tracking-tighter text-white" x-text="selectedPhase?.title"></h2>
-                        <p class="text-white/40 text-xl font-light leading-relaxed" x-text="selectedPhase?.desc"></p>
+                        <h2 class="text-7xl md:text-[6rem] font-black tracking-tighter text-white leading-none uppercase italic" x-text="selectedPhase?.title"></h2>
+                        <p class="text-white/40 text-2xl font-light italic leading-relaxed" x-text="selectedPhase?.desc"></p>
                     </div>
 
-                    <div class="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
-                        <h4 class="mono text-[10px] text-white/20 uppercase tracking-[0.4em]">Sub-System Terminal</h4>
-                        <div class="space-y-3">
-                            <template x-for="log in logs" :key="log">
-                                <div class="text-[9px] mono text-sky-500/60 overflow-hidden text-ellipsis whitespace-nowrap tracking-tighter" x-text="log"></div>
+                    <div class="glass p-10 rounded-[3rem] border-white/5 space-y-6 shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-8 opacity-10">
+                            <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <h4 class="mono text-[10px] text-white/20 uppercase tracking-[0.4em] font-bold border-b border-white/5 pb-4">
+                            Sub_System_Telemetry
+                        </h4>
+                        <div class="space-y-4 max-h-[200px] overflow-y-auto pr-4">
+                            <template x-for="(log, index) in logs" :key="index">
+                                <div class="text-[10px] mono flex gap-4 border-l-2 border-white/5 pl-4 py-1" :class="index === 0 ? 'text-sky-400 border-sky-500' : 'text-white/30 border-white/5'">
+                                    <span class="opacity-30" x-text="`[${7 - index}]` font-bold"></span>
+                                    <span class="truncate" x-text="log"></span>
+                                </div>
                             </template>
                         </div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <template x-for="detail in selectedPhase?.details" :key="detail.label">
-                        <div class="glass p-10 rounded-[3rem] border-white/5 hover:bg-white/[0.03] transition-all relative group overflow-hidden">
-                            <div class="absolute top-0 right-0 p-6">
-                                <span class="mono text-[8px] px-2 py-1 rounded bg-white/5 text-white/40" x-text="detail.status"></span>
+                <div class="lg:col-span-7">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <template x-for="detail in selectedPhase?.details" :key="detail.l">
+                            <div class="glass p-12 rounded-[4rem] hover:bg-white/[0.03] transition-all duration-500 group relative overflow-hidden border-white/10 shadow-2xl">
+                                <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-sky-500/[0.02] blur-3xl group-hover:bg-sky-500/10 transition-all"></div>
+                                
+                                <div class="relative z-10 flex flex-col justify-between h-full">
+                                    <div class="flex justify-between items-center mb-12">
+                                        <h5 class="mono text-[11px] text-sky-500/50 uppercase tracking-[0.4em] font-black" x-text="detail.l"></h5>
+                                        <div class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></div>
+                                    </div>
+                                    
+                                    <p class="text-4xl font-black tracking-tighter text-white/90 leading-tight group-hover:text-sky-400 transition-colors" x-text="detail.v"></p>
+                                    
+                                    <div class="mt-12 flex gap-1.5 opacity-20">
+                                        <template x-for="i in 12"><div class="h-0.5 w-full bg-sky-500/40"></div></template>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="space-y-6 relative z-10">
-                                <h5 class="mono text-[10px] text-sky-500/50 uppercase tracking-[0.3em]" x-text="detail.label"></h5>
-                                <p class="text-3xl md:text-4xl font-light tracking-tighter text-white/90" x-text="detail.val"></p>
-                            </div>
-                            <div class="absolute bottom-0 left-0 h-[2px] bg-sky-500/30 transition-all duration-700 w-0 group-hover:w-full"></div>
-                        </div>
-                    </template>
-                </div>
+                        </template>
 
+                        <div class="md:col-span-2 glass-dark p-12 rounded-[4rem] border-sky-500/10">
+                            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                                <div class="space-y-2">
+                                    <h6 class="mono text-[10px] text-white/20 uppercase tracking-[0.5em] font-bold">Realtime_Neural_Sync</h6>
+                                    <p class="text-xl font-light text-white/60">Data sinkronisasi dengan node <span class="text-sky-500">Rumah</span> berjaya.</p>
+                                </div>
+                                <div class="flex -space-x-4">
+                                    <div class="w-12 h-12 rounded-full border-2 border-surface-primary bg-sky-500 flex items-center justify-center font-bold text-xs shadow-lg shadow-sky-500/20">JS</div>
+                                    <div class="w-12 h-12 rounded-full border-2 border-surface-primary bg-blue-700 flex items-center justify-center font-bold text-xs">RS</div>
+                                    <div class="w-12 h-12 rounded-full border-2 border-surface-primary bg-slate-800 flex items-center justify-center font-bold text-[10px]">Tauri</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <footer class="relative z-50 p-10 border-t border-white/5 glass flex flex-col md:flex-row justify-between items-center gap-8">
-        <div class="flex gap-12">
-            <div class="flex flex-col gap-1">
-                <span class="mono text-[9px] text-white/20 uppercase tracking-widest">Encryption_Method</span>
-                <span class="text-[11px] font-bold text-white/60">AES-256-GCM (ECC)</span>
+    <footer class="relative z-50 p-12 glass border-t border-white/5 bg-black/40">
+        <div class="max-w-[1600px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-12">
+            
+            <div class="flex gap-16 flex-wrap justify-center">
+                <div class="flex flex-col gap-2">
+                    <span class="mono text-[9px] text-white/20 uppercase tracking-[0.4em] font-black">Encryption</span>
+                    <span class="text-xs font-bold text-white/50 flex items-center gap-2 italic">
+                        <svg class="w-3 h-3 text-sky-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zM7 7a3 3 0 116 0v2H7V7z"/></svg>
+                        RSA_AES_4096_GCM
+                    </span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <span class="mono text-[9px] text-white/20 uppercase tracking-[0.4em] font-black">Gateway_Point</span>
+                    <span class="text-xs font-bold text-sky-500 flex items-center gap-2 italic tracking-widest">
+                        SELANGOR_VIRTUAL_GATEWAY
+                    </span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <span class="mono text-[9px] text-white/20 uppercase tracking-[0.4em] font-black">Architecture</span>
+                    <span class="text-xs font-bold text-white/40 italic">Micro-Kernel_Rust</span>
+                </div>
             </div>
-            <div class="flex flex-col gap-1">
-                <span class="mono text-[9px] text-white/20 uppercase tracking-widest">Global_Latency</span>
-                <span class="text-[11px] font-bold text-green-500/80">34.02ms (Nominal)</span>
+
+            <div class="mono text-[11px] text-white/10 tracking-[0.8em] uppercase flex items-center gap-4 bg-white/[0.02] px-8 py-3 rounded-full border border-white/5">
+                <span class="w-2 h-2 bg-sky-500 rounded-full animate-pulse shadow-[0_0_10px_#0ea5e9]"></span>
+                <span class="text-sky-500/40" x-text="currentTime"></span>
             </div>
-        </div>
 
-        <div x-data="{ time: '' }" x-init="setInterval(() => {
-            const now = new Date();
-            time = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kuala_Lumpur' }).replace(',', ' //');
-        }, 1000)" class="mono text-[10px] text-white/10 tracking-[0.6em] uppercase">
-            BANTING // <span class="text-sky-500/50" x-text="time"></span>
-        </div>
-
-        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light">
-            &copy; 2026 // <span class="text-sky-500/60 font-semibold uppercase italic">Shift_Dev.js</span> // World Smart Eye
+            <div class="text-center lg:text-right">
+                <p class="text-[11px] text-white/20 tracking-widest font-light mb-1 italic">
+                    &copy; 2026 Shift_Dev.js Masterplan
+                </p>
+                <div class="flex items-center justify-center lg:justify-end gap-2">
+                    <span class="w-8 h-[1px] bg-sky-500/30"></span>
+                    <span class="text-[10px] mono text-sky-500/60 font-black uppercase tracking-[0.2em]">Designed_at_Rumah</span>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <script>
+        function systemState() {
+            return {
+                view: 'home',
+                selectedPhase: null,
+                sysStatus: 'SECURE',
+                aiLoad: 42,
+                framesCount: 0,
+                currentTime: '',
+                healthStats: [
+                    { label: 'CPU_Temp', value: '42°C' },
+                    { label: 'Network', value: '1.2 Gbps' },
+                    { label: 'Buffer', value: '0.04ms' },
+                    { label: 'IO_Wait', value: '1%' }
+                ],
+                devices: [
+                    { name: 'Gateway_Rumah', status: 'ONLINE' },
+                    { name: 'Archer_C54', status: 'ACTIVE' },
+                    { name: 'AI_Processor', status: 'STABLE' }
+                ],
+                phases: [
+                    { id: 1, title: 'Intelligence Hub', icon: 'M13 10V3L4 14h7v7l9-11h-7z', desc: 'Pusat integrasi sektor kritikal merangkumi industri dan kediaman.', tech: 'Rust Micro-Service', details: [{l:'Sector',v:'Industrial LPR'},{l:'Node',v:'Rumah Cloud Hub'}] },
+                    { id: 2, title: 'Hardware Core', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3', desc: 'Gred industri sensor 4K dengan sistem optik motorized.', tech: 'Edge Hardware', details: [{l:'Optical',v:'4K Low-Light'},{l:'Switch',v:'Layer 3 PoE+'}] },
+                    { id: 3, title: 'Connectivity', icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01', desc: 'Rangkaian kebal menggunakan protokol WireGuard berenkripsi tinggi.', tech: 'WireGuard P2P', details: [{l:'VPN',v:'AES-GCM Mesh'},{l:'Lat',v:'Sub-20ms Sync'}] },
+                    { id: 4, title: 'AI Inference', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707', desc: 'Enjin analitik visual YOLOv10 untuk pengesanan objek masa nyata.', tech: 'ONNX Runtime', details: [{l:'Engine',v:'YOLOv10 Core'},{l:'Acc',v:'CUDA Enabled'}] },
+                    { id: 5, title: 'Database Layer', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7', desc: 'Penyimpanan data graf dan dokumen menggunakan SurrealDB.', tech: 'SurrealDB Rust', details: [{l:'Type',v:'Graph-Relational'},{l:'Speed',v:'Instant Index'}] },
+                    { id: 6, title: 'Desktop Tauri', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18', desc: 'Aplikasi asli sistem yang sangat ringan dan berprestasi tinggi.', tech: 'Tauri + Rust', details: [{l:'Build',v:'Native Binary'},{l:'Memory',v:'Low Footprint'}] },
+                    { id: 7, title: 'Global Vision', icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3', desc: 'Ekosistem pantauan sempadan merentasi nod antarabangsa.', tech: 'Global CDN', details: [{l:'Range',v:'Worldwide Hub'},{l:'Policy',v:'Zero-Trust'}] }
+                ],
+                logs: [],
+                
+                initSystem() {
+                    this.updateTime();
+                    setInterval(() => this.updateTime(), 1000);
+                    setInterval(() => {
+                        this.aiLoad = Math.floor(Math.random() * (50 - 40 + 1) + 40);
+                        this.framesCount += Math.floor(Math.random() * 5);
+                    }, 2000);
+                    this.addLog('System Initialized from Rumah');
+                    this.addLog('Gateway Selangor Synchronized');
+                },
+                
+                updateTime() {
+                    const now = new Date();
+                    this.currentTime = now.toLocaleString('en-GB', { 
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: true, timeZone: 'Asia/Kuala_Lumpur' 
+                    }).replace(',', ' //');
+                },
+                
+                addLog(msg) {
+                    const t = new Date().toLocaleTimeString('en-GB');
+                    this.logs.unshift(`[${t}] ${msg}`);
+                    if(this.logs.length > 7) this.logs.pop();
+                },
+                
+                openPhase(phase) {
+                    this.selectedPhase = phase;
+                    this.view = 'detail';
+                    this.addLog(`Accessing Node: ${phase.title}`);
+                },
+                
+                toggleAlert() {
+                    this.sysStatus = this.sysStatus === 'SECURE' ? 'ALERT' : 'SECURE';
+                    this.addLog(this.sysStatus === 'ALERT' ? 'THREAT DETECTED IN NODE 04' : 'All Systems Nominal');
+                },
+                
+                captureSnapshot() {
+                    this.addLog('Snapshot Saved to /Rumah/Secure/Captured/');
+                }
+            }
+        }
+    </script>
 </body>
 </html>

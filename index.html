@@ -3,154 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Smart Eye | Shift_Dev.js Blueprint</title>
+    <title>World Smart Eye | Shift_Dev.js Masterplan</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        body { 
-            font-family: 'Geist', 'Google Sans', 'Inter', sans-serif; 
-            letter-spacing: -0.02em;
-        }
+        body { font-family: 'Geist', 'Google Sans', sans-serif; letter-spacing: -0.02em; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); }
         [x-cloak] { display: none !important; }
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .text-shadow { text-shadow: 0 0 20px rgba(14, 165, 233, 0.5); }
     </style>
 </head>
-<body class="min-h-screen text-white/90 p-6 md:p-16 flex flex-col justify-between" x-data="{ 
-    projects: [
-        {
-            title: 'Industry',
-            icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5',
-            steps: [
-                { label: 'Hardware', text: 'Hikvision PoE Industrial Grade' },
-                { label: 'Step 1', text: 'Setup NVR dengan Hard Disk 8TB (Min)' },
-                { label: 'Step 2', text: 'Integrasi Python LPR (License Plate Recognition)' }
-            ]
-        },
-        {
-            title: 'Retail',
-            icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z',
-            steps: [
-                { label: 'Hardware', text: 'Imou/Ezviz WiFi Dome' },
-                { label: 'Step 1', text: 'Cloud Recording & Local SD Card backup' },
-                { label: 'Step 2', text: 'Python People Counting (Data Analitik)' }
-            ]
-        },
-        {
-            title: 'Corporate',
-            icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
-            steps: [
-                { label: 'Hardware', text: 'Face Recognition Terminals' },
-                { label: 'Step 1', text: 'Central Management System (CMS)' },
-                { label: 'Step 2', text: 'Telegram Bot Alert untuk VIP arrival' }
-            ]
-        },
-        {
-            title: 'Home Living',
-            icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
-            steps: [
-                { label: 'Hardware', text: 'Smart WiFi Camera (Pan/Tilt)' },
-                { label: 'Step 1', text: 'Sambung WiFi Router Archer C54' },
-                { label: 'Step 2', text: 'Setup World Smart Eye Bot (Snapshot)' }
-            ]
-        }
-    ],
-    stack: [
-        { name: 'Rust Core', desc: 'Sistem memori selamat & ultra-pantas.' },
-        { name: 'Tauri Runtime', desc: 'GUI Desktop yang ringan (Native WebView).' },
-        { name: 'SurrealDB', desc: 'Database multi-model untuk data real-time.' }
-    ]
-}">
+<body class="min-h-screen text-white/90 flex flex-col justify-between" 
+      x-data="{ 
+        view: 'home', 
+        selectedPhase: null,
+        phases: [
+            { id: 1, title: 'Intelligence Hub', icon: 'M13 10V3L4 14h7v7l9-11h-7z', desc: 'Sektor Utama Industri & Kediaman', details: ['Industry: Hikvision PoE & Python LPR', 'Retail: People Counting Analytics', 'Corporate: Face Recognition Terminals', 'Home Living: Telegram Bot Snapshot'] },
+            { id: 2, title: 'Hardware Core', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', desc: 'Pemilihan Sensor & Optik Gred Tinggi', details: ['4K Ultra HD Low Light Sensors', 'Industrial PoE Switches', 'Thermal Imaging Integration', 'Backup Power Management'] },
+            { id: 3, title: 'Connectivity', icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0M2.828 9.9a15 15 0 0121.214 0', desc: 'Networking & Secure Tunneling', details: ['Secure VPN Tunneling', 'Archer C54 Bridge Mode', 'Dynamic DNS Setup', 'End-to-End Encryption'] },
+            { id: 4, title: 'AI Inference', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', desc: 'Object Detection & LPR Engine', details: ['YOLOv8 Real-time Detection', 'ONNX Runtime Optimization', 'Automated Plate Recognition', 'Human Behavior Analysis'] },
+            { id: 5, title: 'Database Layer', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4', desc: 'SurrealDB Real-time Sync', details: ['Graph Database Relations', 'Event-Driven Archiving', 'Multi-Node Synchronization', 'Instant Search Indexing'] },
+            { id: 6, title: 'Desktop Deployment', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', desc: 'Tauri & Rust Compilation', details: ['Cross-Platform Build (Win/Mac)', 'Resource-Efficient Binary', 'System Tray Background Ops', 'Auto-Update Capability'] },
+            { id: 7, title: 'Global Expansion', icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9', desc: 'Monitoring Merentasi Dunia', details: ['Multi-Site Command Center', 'Global Latency Optimization', 'Enterprise User Management', 'Cloud Hybrid Integration'] }
+        ]
+      }">
 
-    <!-- Header -->
-    <header class="max-w-6xl mx-auto mb-16 text-center space-y-6">
-        <div class="inline-block p-1 px-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.4em] uppercase mb-2">
-            Central Intelligence Hub // Shift_Dev.js
-        </div>
-        <h1 class="text-6xl md:text-8xl font-light tracking-tighter">
-            WORLD <span class="font-semibold text-sky-500 italic">SMART EYE</span>
-        </h1>
-        <p class="text-white/40 max-w-2xl mx-auto font-light text-lg leading-relaxed">
-            Sistem Pengawasan Pintar: <span class="text-white/70 font-normal underline decoration-sky-500/50">Dari Rumah Untuk Dunia.</span><br>
-            Arsitektur gred industri menggunakan Rust, Tauri, dan SurrealDB.
-        </p>
-    </header>
-
-    <!-- Main Blueprint Grid -->
-    <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
-        <template x-for="project in projects" :key="project.title">
-            <div x-data="{ hover: false }" 
-                 @mouseenter="hover = true" 
-                 @mouseleave="hover = false"
-                 class="glass-card relative p-10 rounded-[3.5rem] transition-all duration-700 overflow-hidden group hover:border-sky-500/40 hover:bg-white/[0.04]">
-                
-                <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/[0.05] blur-[80px] group-hover:bg-sky-500/[0.15] transition-all duration-700"></div>
-
-                <div class="relative z-10 flex flex-col h-full space-y-8">
-                    <div class="flex justify-between items-start">
-                        <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-700 shadow-2xl transition-all duration-700" :class="hover && 'scale-110 shadow-sky-500/50 -rotate-3'">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="project.icon"></path>
-                            </svg>
-                        </div>
-                        <span class="text-[9px] tracking-widest text-white/10 uppercase font-bold">Node Ready</span>
-                    </div>
-
-                    <div class="flex-grow">
-                        <h2 class="text-2xl font-semibold tracking-tight text-white/90 mb-6" x-text="project.title"></h2>
-                        <ul class="space-y-5">
-                            <template x-for="step in project.steps" :key="step.label">
-                                <li>
-                                    <span class="block text-[10px] font-bold text-sky-500/60 uppercase tracking-widest mb-1" x-text="step.label"></span>
-                                    <p class="text-[13px] text-white/40 leading-relaxed font-light" x-text="step.text"></p>
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
-                </div>
+    <!-- HOME VIEW -->
+    <div x-show="view === 'home'" x-transition.opacity.duration.500ms class="p-8 md:p-16">
+        <header class="max-w-6xl mx-auto mb-16 text-center space-y-6">
+            <div class="inline-block p-1 px-4 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] tracking-[0.4em] uppercase mb-2">
+                Shift_Dev.js // Roadmap 2026
             </div>
-        </template>
-    </main>
+            <h1 class="text-6xl md:text-8xl font-light tracking-tighter uppercase">
+                World <span class="font-semibold text-sky-500 italic text-shadow">Smart Eye</span>
+            </h1>
+            <p class="text-white/40 max-w-2xl mx-auto font-light text-lg italic">
+                "Sistem Pengawasan Pintar: <span class="text-white/80 not-italic">Dari Rumah Untuk Dunia.</span>"
+            </p>
+        </header>
 
-    <!-- Technical Stack Section (The World Class Layer) -->
-    <div class="max-w-4xl mx-auto mt-20 p-8 rounded-[2rem] border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
-        <h3 class="text-center text-[10px] tracking-[0.5em] uppercase text-white/20 mb-8 font-bold">System Core Architecture</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <template x-for="tech in stack" :key="tech.name">
-                <div class="text-center space-y-2">
-                    <div class="text-sky-400 font-semibold text-sm tracking-tight" x-text="tech.name"></div>
-                    <p class="text-[11px] text-white/30 font-light leading-tight" x-text="tech.desc"></p>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <template x-for="phase in phases" :key="phase.id">
+                <div @click="view = 'detail'; selectedPhase = phase" 
+                     class="glass p-8 rounded-[2.5rem] cursor-pointer hover:border-sky-500/50 hover:bg-white/[0.04] transition-all group relative overflow-hidden">
+                    <div class="absolute -top-12 -left-12 w-32 h-32 bg-sky-500/5 blur-3xl group-hover:bg-sky-500/10 transition-all"></div>
+                    <div class="mb-6 p-4 w-fit rounded-2xl bg-gradient-to-br from-sky-400 to-blue-700 shadow-xl group-hover:rotate-6 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="phase.icon"></path></svg>
+                    </div>
+                    <span class="text-[10px] text-white/20 font-bold tracking-[0.2em] uppercase">Phase 0<span x-text="phase.id"></span></span>
+                    <h2 class="text-xl font-semibold mt-2 tracking-tight" x-text="phase.title"></h2>
+                    <p class="text-xs text-white/40 mt-3 font-light leading-relaxed" x-text="phase.desc"></p>
                 </div>
             </template>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="mt-24 text-center space-y-6 pb-12">
-        <div x-data="{ 
-                dateTime: '',
-                updateTime() {
-                    const now = new Date();
-                    const options = { 
-                        day: '2-digit', month: '2-digit', year: 'numeric',
-                        hour: '2-digit', minute: '2-digit', second: '2-digit',
-                        hour12: true, timeZone: 'Asia/Kuala_Lumpur'
-                    };
-                    this.dateTime = now.toLocaleString('en-GB', options).replace(',', ' //');
-                }
-             }" 
-             x-init="updateTime(); setInterval(() => updateTime(), 1000)"
-             class="font-mono text-[10px] text-white/10 tracking-[0.5em] uppercase">
-            KUALA LUMPUR // <span class="text-sky-500/50" x-text="dateTime"></span>
+    <!-- DETAIL VIEW -->
+    <div x-show="view === 'detail'" x-cloak x-transition.opacity.duration.500ms class="p-8 md:p-16 flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="max-w-4xl w-full glass p-10 md:p-16 rounded-[4rem] space-y-10 relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-80 h-80 bg-sky-500/10 blur-[120px]"></div>
+            
+            <button @click="view = 'home'" class="flex items-center gap-3 text-sky-400 text-xs font-bold tracking-widest hover:text-sky-300 transition-all group">
+                <svg class="w-4 h-4 group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                BACK TO MAIN TOPIC
+            </button>
+
+            <div class="space-y-4">
+                <h3 class="text-sky-500/50 uppercase tracking-[0.5em] text-[10px] font-bold">Technical Stack // 0<span x-text="selectedPhase?.id"></span></h3>
+                <h2 class="text-5xl md:text-7xl font-light tracking-tighter" x-text="selectedPhase?.title"></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-white/10">
+                <template x-for="detail in selectedPhase?.details" :key="detail">
+                    <div class="group/item p-4 rounded-3xl hover:bg-white/[0.02] transition-colors">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-sky-500"></div>
+                            <span class="text-[10px] font-bold text-white/20 uppercase tracking-widest">Active Module</span>
+                        </div>
+                        <p class="text-white/70 font-light text-lg" x-text="detail"></p>
+                    </div>
+                </template>
+            </div>
         </div>
-        
-        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light italic">
-            &copy; 2026 World Smart Eye Blueprint — Engineered by <span class="text-sky-500/60 font-semibold not-italic">Shift_Dev.js</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="p-12 text-center space-y-6">
+        <div x-data="{ dateTime: '' }" x-init="setInterval(() => {
+            const now = new Date();
+            dateTime = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kuala_Lumpur' }).replace(',', ' //');
+        }, 1000)" class="font-mono text-[10px] text-white/10 tracking-[0.5em] uppercase">
+            BANTING // SELANGOR // <span class="text-sky-500/50" x-text="dateTime"></span>
+        </div>
+        <div class="text-[11px] text-white/20 tracking-[0.2em] font-light">
+            &copy; 2026 <span class="text-white/40 font-semibold">WORLD SMART EYE</span> — Blueprint by Shift_Dev.js
         </div>
     </footer>
-
 </body>
 </html>

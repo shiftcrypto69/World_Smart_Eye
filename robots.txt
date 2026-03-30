@@ -1,0 +1,17 @@
+# ==========================================
+# ROBOTS.TXT FOR WORLD SMART EYE (W.S.E)
+# Optimized for Googlebot & Bingbot
+# ==========================================
+
+User-agent: *
+Allow: /
+
+# Menghalang bot daripada mengindeks folder aset peribadi (jika ada)
+Disallow: /private/
+Disallow: /config/
+
+# Pautan ke fail Sitemap (Tukar URL ini mengikut domain GitHub Ustaz)
+Sitemap: https://shiftcrypto69.github.io/world-smart-eye/sitemap.xml
+
+# Memberitahu bot kelajuan crawl (untuk server yang stabil)
+Crawl-delay: 10
